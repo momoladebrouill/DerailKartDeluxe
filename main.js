@@ -12,7 +12,7 @@ var temp = new THREE.Vector3;
 var dir = new THREE.Vector3;
 var a = new THREE.Vector3;
 var b = new THREE.Vector3;
-var coronaSafetyDistance = 0.3;
+var coronaSafetyDistance = 0.6;
 var velocity = 0.0;
 var speed = 0.0;
 
@@ -22,7 +22,7 @@ animate();
 function init() {
 
     camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 10 );
-    camera.position.set( 0, .3, 0 );
+    camera.position.set( 0, 0.6, 0 );
     
     scene = new THREE.Scene();
     camera.lookAt( scene.position );
@@ -85,9 +85,9 @@ function animate() {
   speed = 0.0;
   
   if ( keys.w )
-    speed = 0.01;
+    speed = 0.05;
   else if ( keys.s )
-    speed = -0.01;
+    speed = -0.05;
 
   velocity += ( speed - velocity ) * .3;
   mesh.translateZ( velocity );
@@ -98,13 +98,13 @@ function animate() {
     mesh.rotateY(-0.05);
     
   
-  a.lerp(mesh.position, 0.4);
+  a.lerp(mesh.position, 0.5);
   b.copy(goal.position);
   
     dir.copy( a ).sub( b ).normalize();
     const dis = a.distanceTo( b ) - coronaSafetyDistance;
     goal.position.addScaledVector( dir, dis );
-    goal.position.lerp(temp, 0.02);
+    goal.position.lerp(temp, 0.2);
     temp.setFromMatrixPosition(follow.matrixWorld);
     
     camera.lookAt( mesh.position );
