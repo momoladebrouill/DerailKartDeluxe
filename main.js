@@ -1,5 +1,6 @@
 import * as THREE from "https://cdn.skypack.dev/three@0.136.0";
 import Car from "./car.js"
+import World from "./world.js"
 var camera, scene, renderer, mesh, goal, keys, follow;
 
 var time = 0;
@@ -7,6 +8,7 @@ var newPosition = new THREE.Vector3();
 var matrix = new THREE.Matrix4();
 
 let car;
+let world;
 init();
 animate();
 
@@ -22,7 +24,7 @@ function init() {
 		scene.add(light)
 
 		car = new Car(scene);
-    
+		world = new World(scene);
     goal = new THREE.Object3D;
     follow = new THREE.Object3D;
     follow.position.z = -0.6;

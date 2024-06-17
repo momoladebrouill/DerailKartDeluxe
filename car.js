@@ -1,6 +1,5 @@
 import * as THREE from "https://cdn.skypack.dev/three@0.136.0";
 
-
 // roues de la voiture
 function createWheels() {
   const geometry = new THREE.BoxBufferGeometry(12, 12, 33);
@@ -38,8 +37,8 @@ function createCar() {
   cabin.position.y = 25.5;
   car.add(cabin);
 	const car2 = new THREE.Group();
-	car.rotateY(-Math.PI/2);
 	car2.add(car)
+	car2.rotateZ(Math.PI/4)
   return car2;
 }
 
