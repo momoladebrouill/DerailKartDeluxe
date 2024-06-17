@@ -43,13 +43,14 @@ function createCar() {
   return car2;
 }
 
-let coronaSafetyDistance = 5.0
+let coronaSafetyDistance = 2.0;
 let DEGTORAD = 0.01745327;
 
 export default class Car {
   constructor(scene) {
     this.group = createCar();
 		this.velocity = 0.0;
+    this.direction = 0;
 		this.speed = 0.0;
     this.group.position.set(0, 0, 0);
 		this.stop = 1;
@@ -64,24 +65,39 @@ export default class Car {
 
     //les trucs des voitures et tout
     this.wheels = 4;
+    console.log(this.group)
   }
 
   update(keys,camera,goal,follow){
 		let mesh = this.group;
 		this.speed = 0.0
 		if ( keys.w )
-			this.speed = 0.05;
-		else if ( keys.s )
-			this.speed = -0.05;
+      {
+      this.velocity += 0.01
+    }
+		else if ( keys.s ){
+      this.velocity -= 0.01
+    }
 
-		this.velocity += ( this.speed - this.velocity ) * .3;
+    this.direction = 0;
+    if ( keys.a )
+      this.direction += 1;
+    else if ( keys.d )
+      this.direction += -1;
+
+    this.velocity *= 0.9;
+    this.group.children[0].children[0].rotation.z -= this.velocity;
+    this.group.children[0].children[1].rotation.z -= this.velocity;
+    let v = this.group.children[0].children[1].rotation.y;
+    this.group.children[0].children[1].rotation.y = - ( v - this.direction )/2;
+	  mesh.rotateY(this.direction * this.velocity * 0.6);
 		mesh.translateZ( this.velocity );
 
-		if ( keys.a )
+		/*if ( keys.a )
 			mesh.rotateY(0.05);
 		else if ( keys.d )
 			mesh.rotateY(-0.05);
-
+    */
 
 		this.a.lerp(mesh.position, 0.5);
 		this.b.copy(goal.position);
