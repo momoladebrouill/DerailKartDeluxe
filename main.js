@@ -1,75 +1,114 @@
 import * as THREE from "https://cdn.skypack.dev/three@0.136.0";
+import Car from "./car.js"
+var camera, scene, renderer, mesh, goal, keys, follow;
 
+var time = 0;
+var newPosition = new THREE.Vector3();
+var matrix = new THREE.Matrix4();
 
-// les élèments globaux 
-let scene = new THREE.Scene();
-let camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 1000);
-let renderer = new THREE.WebGLRenderer({
-  antialias: true
-});
-renderer.setSize(innerWidth, innerHeight);
-renderer.setClearColor(0xffffaa);
+var stop = 1;
+var DEGTORAD = 0.01745327;
+var temp = new THREE.Vector3;
+var dir = new THREE.Vector3;
+var a = new THREE.Vector3;
+var b = new THREE.Vector3;
+var coronaSafetyDistance = 0.3;
+var velocity = 0.0;
+var speed = 0.0;
 
+init();
+animate();
 
-camera.position.z = 3
-camera.position.y = 5
-camera.lookAt(0,0,0);
+function init() {
 
-// ambient light
-var ambientLight = new THREE.AmbientLight ( 0xffffff, 0.2)
-scene.add( ambientLight )
+    camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 10 );
+    camera.position.set( 0, .3, 0 );
+    
+    scene = new THREE.Scene();
+    camera.lookAt( scene.position );
 
-// directional light
-var directionalLight = new THREE.DirectionalLight( 0xffffff, 1.0)
-directionalLight.position.set(10, 10, 10)
-scene.add( directionalLight )
+    var geometry = new THREE.BoxBufferGeometry( 0.2, 0.2, 0.2 );
+    var material = new THREE.MeshNormalMaterial();
 
-document.body.appendChild(renderer.domElement);
+    mesh = new THREE.Mesh( geometry, material );
+    
+    goal = new THREE.Object3D;
+    follow = new THREE.Object3D;
+    follow.position.z = -coronaSafetyDistance;
+    mesh.add( follow );
+    
+    goal.add( camera );
+    scene.add( mesh );
+ 
 
+    
+    var gridHelper = new THREE.GridHelper( 40, 40 );
+    scene.add( gridHelper );
+    
+    scene.add( new THREE.AxesHelper() );
 
-// rotate camera with arrow keys
+    renderer = new THREE.WebGLRenderer( { antialias: true } );
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    document.body.appendChild( renderer.domElement );
+  
+keys = {
+    a: false,
+    s: false,
+    d: false,
+    w: false
+  };
+  
+  document.body.addEventListener( 'keydown', function(e) {
+    
+    const key = e.code.replace('Key', '').toLowerCase();
+    if ( keys[ key ] !== undefined )
+      keys[ key ] = true;
+    
+  });
+  document.body.addEventListener( 'keyup', function(e) {
+    
+    const key = e.code.replace('Key', '').toLowerCase();
+    if ( keys[ key ] !== undefined )
+      keys[ key ] = false;
+    
+  });
 
-document.addEventListener('keydown', (e) => {
-	if (e.key === 'ArrowLeft') {
-		camera.position.x -= 0.1
-	}
-	if (e.key === 'ArrowRight') {
-		camera.position.x += 0.1
-	}
-	if (e.key === 'ArrowUp') {
-		camera.position.y += 0.1
-	}
-	if (e.key === 'ArrowDown') {
-		camera.position.y -= 0.1
-	}
-})
-
-renderer.setAnimationLoop(() => {
-	cube.rotation.x += 0.02;
-  cube.rotation.y += 0.015;
-  renderer.render(scene, camera);
-});
-
-// basic cube
-var geometry = new THREE.BoxGeometry( 1, 1, 1)
-var material = new THREE.MeshStandardMaterial( { color: 0xff00000, flatShading: true, metalness: 0, roughness: 1 })
-var cube = new THREE.Mesh ( geometry, material )
-scene.add(cube)
-
-
-const planeGeometry = new THREE.PlaneGeometry( 2, 2 );
-const planeMaterial = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
-const plane = new THREE.Mesh( planeGeometry, planeMaterial );
-scene.add( plane );
-
-//plane.rotation.set(new THREE.Vector3( 0, 0, Math.PI / 2));
-
-
-function onWindowResize() {
-  camera.aspect = innerWidth / innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(innerWidth, innerHeight);
-  labelRenderer.setSize(innerWidth, innerHeight);
 }
 
+
+let car = new Car(scene);
+
+function animate() {
+
+    requestAnimationFrame( animate );
+    
+  speed = 0.0;
+  
+  if ( keys.w )
+    speed = 0.01;
+  else if ( keys.s )
+    speed = -0.01;
+
+  velocity += ( speed - velocity ) * .3;
+  mesh.translateZ( velocity );
+
+  if ( keys.a )
+    mesh.rotateY(0.05);
+  else if ( keys.d )
+    mesh.rotateY(-0.05);
+    
+  
+  a.lerp(mesh.position, 0.4);
+  b.copy(goal.position);
+  
+    dir.copy( a ).sub( b ).normalize();
+    const dis = a.distanceTo( b ) - coronaSafetyDistance;
+    goal.position.addScaledVector( dir, dis );
+    goal.position.lerp(temp, 0.02);
+    temp.setFromMatrixPosition(follow.matrixWorld);
+    
+    camera.lookAt( mesh.position );
+    
+    renderer.render( scene, camera );
+
+}
