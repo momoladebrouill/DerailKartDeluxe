@@ -6,39 +6,29 @@ var time = 0;
 var newPosition = new THREE.Vector3();
 var matrix = new THREE.Matrix4();
 
-var stop = 1;
-var DEGTORAD = 0.01745327;
-var temp = new THREE.Vector3;
-var dir = new THREE.Vector3;
-var a = new THREE.Vector3;
-var b = new THREE.Vector3;
-var coronaSafetyDistance = 0.6;
-var velocity = 0.0;
-var speed = 0.0;
-
+let car;
 init();
 animate();
 
 function init() {
 
     camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 10 );
-    camera.position.set( 0, 0.6, 0 );
+    camera.position.set( 0, 2.0, 0 );
     
     scene = new THREE.Scene();
     camera.lookAt( scene.position );
 
-    var geometry = new THREE.BoxBufferGeometry( 0.2, 0.2, 0.2 );
-    var material = new THREE.MeshNormalMaterial();
+		const light = new THREE.AmbientLight(0xffffff,1.0);
+		scene.add(light)
 
-    mesh = new THREE.Mesh( geometry, material );
+		car = new Car(scene);
     
     goal = new THREE.Object3D;
     follow = new THREE.Object3D;
-    follow.position.z = -coronaSafetyDistance;
-    mesh.add( follow );
+    follow.position.z = -0.6;
+    car.group.add( follow );
     
     goal.add( camera );
-    scene.add( mesh );
  
 
     
@@ -76,39 +66,9 @@ keys = {
 }
 
 
-let car = new Car(scene);
 
 function animate() {
-
     requestAnimationFrame( animate );
-    
-  speed = 0.0;
-  
-  if ( keys.w )
-    speed = 0.05;
-  else if ( keys.s )
-    speed = -0.05;
-
-  velocity += ( speed - velocity ) * .3;
-  mesh.translateZ( velocity );
-
-  if ( keys.a )
-    mesh.rotateY(0.05);
-  else if ( keys.d )
-    mesh.rotateY(-0.05);
-    
-  
-  a.lerp(mesh.position, 0.5);
-  b.copy(goal.position);
-  
-    dir.copy( a ).sub( b ).normalize();
-    const dis = a.distanceTo( b ) - coronaSafetyDistance;
-    goal.position.addScaledVector( dir, dis );
-    goal.position.lerp(temp, 0.2);
-    temp.setFromMatrixPosition(follow.matrixWorld);
-    
-    camera.lookAt( mesh.position );
-    
+		car.update(keys,camera,goal,follow)
     renderer.render( scene, camera );
-
 }
