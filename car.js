@@ -36,6 +36,7 @@ function createCar() {
   cabin.position.x = -6;
   cabin.position.y = 25.5;
   car.add(cabin);
+	car.rotateY(-Math.PI/2)
 	const car2 = new THREE.Group();
 	car2.add(car)
 	car2.rotateZ(Math.PI/4)
