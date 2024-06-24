@@ -21,7 +21,7 @@ function init() {
     camera.lookAt( scene.position );
 
 		const light = new THREE.AmbientLight(0xffffff,1.0);
-		scene.add(light)
+		//scene.add(light)
 
 		car = new Car(scene);
 		world = new World(scene);
@@ -72,5 +72,6 @@ keys = {
 function animate() {
     requestAnimationFrame( animate );
 		car.update(keys,camera,goal,follow)
+		world.update(car.group.rotation.y)
     renderer.render( scene, camera );
 }

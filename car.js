@@ -8,6 +8,28 @@ function createWheels() {
   return wheel;
 }
 
+function createLight(isBack,color, radius) {
+	const group = new THREE.Group(); 
+	const light = new THREE.PointLight(color, 1.0, radius);
+	group.add(light)
+
+
+	const geometry = new THREE.SphereGeometry(2.5, 32, 32);
+	const material = new THREE.MeshBasicMaterial({ color: color});
+	const sphere = new THREE.Mesh(geometry, material);
+	group.add(sphere);
+
+	const doublegroup = new THREE.Group()
+
+	const droite = group.clone()
+	droite.position.z = -10
+	doublegroup.add(droite)
+	group.position.z = 10
+	doublegroup.add(group)
+
+	return doublegroup;
+}
+
 // voiture en question
 function createCar() {
   const car = new THREE.Group();
@@ -21,6 +43,22 @@ function createCar() {
   frontWheel.position.y = 6;  
   frontWheel.position.x = 18;
   car.add(frontWheel);
+
+
+	//is back ? ; color ; radius of light
+	const backLight = createLight(true,0xff0000,0.2)
+  backLight.position.y  = 15
+	backLight.position.x = -30
+	car.add(backLight)
+
+	const frontLight = createLight(false,0xffffff,15.0)
+  frontLight.position.y  = 15
+	frontLight.position.x = 30
+	car.add(frontLight)
+
+	const upLight = createLight(false,0xff7f00,1.0)
+	upLight.position.y = 31
+	car.add(upLight)
 
   const main = new THREE.Mesh(
     new THREE.BoxBufferGeometry(60, 15, 30),
@@ -65,7 +103,6 @@ export default class Car {
 
     //les trucs des voitures et tout
     this.wheels = 4;
-    console.log(this.group)
   }
 
   update(keys,camera,goal,follow){
@@ -86,8 +123,9 @@ export default class Car {
       this.direction += -1;
 
     this.velocity *= 0.9;
-    this.group.children[0].children[0].rotation.z -= this.velocity;
-    this.group.children[0].children[1].rotation.z -= this.velocity;
+		let vitessepente = -mesh.rotation.y / 10
+    this.group.children[0].children[0].rotation.z -= this.velocity + vitessepente;
+    this.group.children[0].children[1].rotation.z -= this.velocity + vitessepente;
     let v = this.group.children[0].children[1].rotation.y;
     this.group.children[0].children[1].rotation.y = - ( v - this.direction )/2;
 	  mesh.rotateY(this.direction * this.velocity * 0.6);
