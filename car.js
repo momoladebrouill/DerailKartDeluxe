@@ -145,7 +145,9 @@ export default class Car {
 		goal.position.addScaledVector( this.dir, dis );
 		goal.position.lerp(this.temp, 0.2);
 		this.temp.setFromMatrixPosition(follow.matrixWorld);
-
+		mesh.position.x = 0.0
+		mesh.position.y = 0.0
 		camera.lookAt( mesh.position );
+		return mesh.rotation.y + 0.5 * ( (keys.w ? -1.0 : 0.0) + (keys.s ? 1.0 : 0.0) )
   }
 }

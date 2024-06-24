@@ -35,9 +35,9 @@ function init() {
 
     
     var gridHelper = new THREE.GridHelper( 40, 40 );
-    scene.add( gridHelper );
+   // scene.add( gridHelper );
     
-    scene.add( new THREE.AxesHelper() );
+    //scene.add( new THREE.AxesHelper() );
 
     renderer = new THREE.WebGLRenderer( { antialias: true } );
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -71,7 +71,7 @@ keys = {
 
 function animate() {
     requestAnimationFrame( animate );
-		car.update(keys,camera,goal,follow)
-		world.update(car.group.rotation.y)
+		const speed = car.update(keys,camera,goal,follow)
+		world.update(speed)
     renderer.render( scene, camera );
 }

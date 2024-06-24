@@ -6,7 +6,8 @@ const WALLHEIGHT = 0.5
 const XMAX = 100.0
 function createFloor(w,color) {
 	const geometry = new THREE.PlaneGeometry(w, 100 );
-	const material = new THREE.MeshStandardMaterial( {color: color, side: THREE.DoubleSide} );
+	// Lambert pas trop de ram, sinon Standard
+	const material = new THREE.MeshLambertMaterial( {color: color, side: THREE.DoubleSide} );
 	const plane = new THREE.Mesh( geometry, material );
 	return plane;
 }

@@ -5,7 +5,7 @@ export default class Tree {
 		this.group = new THREE.Group()
 
 		// couleur, intensité, distance
-    let pointLight = new THREE.PointLight(0xffffff, 1.5, 0.5);
+    let pointLight = new THREE.PointLight(0xffffff, 1.5, 4.0);
     pointLight.position.set(0, 2.0, 0);
 		this.group.add(pointLight)
 		// rayon top, rayon bot, hauteur, nombre de sommets
