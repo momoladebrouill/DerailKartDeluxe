@@ -15,7 +15,8 @@ animate();
 function init() {
 
     camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 50 );
-    camera.position.set( 0, 2.0, 0 );
+		// recul, droite, haut
+    camera.position.set(2.0, 5.0, 0.0);
     
     scene = new THREE.Scene();
     camera.lookAt( scene.position );
@@ -24,6 +25,7 @@ function init() {
 		//scene.add(light)
 
 		car = new Car(scene);
+		car.group.rotateY(-Math.PI/2)
 		world = new World(scene);
     goal = new THREE.Object3D;
     follow = new THREE.Object3D;
@@ -35,9 +37,9 @@ function init() {
 
     
     var gridHelper = new THREE.GridHelper( 40, 40 );
-   // scene.add( gridHelper );
+   scene.add( gridHelper );
     
-    //scene.add( new THREE.AxesHelper() );
+    scene.add( new THREE.AxesHelper() );
 
     renderer = new THREE.WebGLRenderer( { antialias: true } );
     renderer.setSize( window.innerWidth, window.innerHeight );
