@@ -20,6 +20,14 @@ function init() {
     
     scene = new THREE.Scene();
     camera.lookAt( scene.position );
+		
+		// load a texture, set wrap mode to repeat
+		const texture = new THREE.TextureLoader().load( "texture.jpg" );
+		texture.wrapS = THREE.RepeatWrapping;
+		texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set( 4, 4 );
+		scene.background = texture 
+
 
 		const light = new THREE.AmbientLight(0xffffff,1.0);
 		//scene.add(light)
@@ -36,10 +44,8 @@ function init() {
  
 
     
-    var gridHelper = new THREE.GridHelper( 40, 40 );
-   scene.add( gridHelper );
-    
-    scene.add( new THREE.AxesHelper() );
+		//scene.add(new THREE.GridHelper( 40, 40 ))
+    //scene.add( new THREE.AxesHelper() );
 
     renderer = new THREE.WebGLRenderer( { antialias: true } );
     renderer.setSize( window.innerWidth, window.innerHeight );

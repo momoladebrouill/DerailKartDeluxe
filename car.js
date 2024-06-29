@@ -107,35 +107,27 @@ export default class Car {
 
   update(keys,camera,goal,follow){
 		let mesh = this.group;
+
 		this.speed = 0.0
-		if ( keys.w )
-      {
-      this.velocity += 0.01
-    }
-		else if ( keys.s ){
-      this.velocity -= 0.01
-    }
+		if ( keys.w ) this.velocity += 0.01;
+		else if ( keys.s ) this.velocity -= 0.01;
 
     this.direction = 0;
-    if ( keys.a )
-      this.direction += 1;
-    else if ( keys.d )
-      this.direction += -1;
+    if ( keys.a ) this.direction += 1;
+    else if ( keys.d ) this.direction += -1;
 
     this.velocity *= 0.9;
+
+		// ROUES
+		// on accelere les roues selon l'orientation du véhicule
 		let vitessepente = -mesh.rotation.y / 10
     this.group.children[0].children[0].rotation.z -= this.velocity + vitessepente;
     this.group.children[0].children[1].rotation.z -= this.velocity + vitessepente;
     let v = this.group.children[0].children[1].rotation.y;
     this.group.children[0].children[1].rotation.y = - ( v - this.direction )/2;
+
 	  mesh.rotateY(this.direction * this.velocity * 0.6);
 		mesh.translateZ( this.velocity );
-
-		/*if ( keys.a )
-			mesh.rotateY(0.05);
-		else if ( keys.d )
-			mesh.rotateY(-0.05);
-    */
 
 		this.a.lerp(mesh.position, 0.5);
 		this.b.copy(goal.position);
@@ -147,7 +139,10 @@ export default class Car {
 		this.temp.setFromMatrixPosition(follow.matrixWorld);
 		mesh.position.x = 0.0
 		mesh.position.y = 0.0
+
 		camera.lookAt( mesh.position );
+		camera.position.z -= (camera.position.z - mesh.position.z)/2
+		// renvoie la vitesse en vertical de la voiture
 		return mesh.rotation.y + 0.5 * ( (keys.w ? -1.0 : 0.0) + (keys.s ? 1.0 : 0.0) )
   }
 }

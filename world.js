@@ -3,11 +3,11 @@ import Tree from "./tree.js"
 
 const WORLDWIDTH = 5.0
 const WALLHEIGHT = 0.5
-const XMAX = 100.0
+const XMAX = 25.0
 function createFloor(w,color) {
 	const geometry = new THREE.PlaneGeometry(w, 100 );
 	// Lambert pas trop de ram, sinon Standard
-	const material = new THREE.MeshLambertMaterial( {color: color, side: THREE.DoubleSide} );
+	const material = new THREE.MeshStandardMaterial( {color: color, side: THREE.DoubleSide} );
 	const plane = new THREE.Mesh( geometry, material );
 	return plane;
 }
@@ -32,7 +32,7 @@ export default class World {
 		this.group.add(droite)
 
 
-		this.treeqqty = 100
+		this.treeqqty = 10
 		this.arbres = new THREE.Group()
 		for(let i = 0; i < this.treeqqty; i++){
 			let arbre = new Tree()

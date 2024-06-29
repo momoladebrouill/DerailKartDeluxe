@@ -5,9 +5,9 @@ export default class Tree {
 		this.group = new THREE.Group()
 
 		// couleur, intensité, distance
-    let pointLight = new THREE.PointLight(0xffffff, 1.5, 4.0);
+    /*let pointLight = new THREE.PointLight(0xffffff, 1.5, 4.0);
     pointLight.position.set(0, 2.0, 0);
-		this.group.add(pointLight)
+		this.group.add(pointLight)*/
 		// rayon top, rayon bot, hauteur, nombre de sommets
     this.obj = new THREE.CylinderGeometry(0.1, 0.1, 1.0, 20);
     this.material = new THREE.MeshLambertMaterial({ color: 0x3d251e })
